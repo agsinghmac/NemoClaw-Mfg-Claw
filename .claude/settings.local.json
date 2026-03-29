@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -c \":*)",
+      "Bash(python3 -c \":*)",
+      "Bash(python3:*)",
+      "Bash(source .demo-services/bin/activate)",
+      "Bash(pip install:*)",
+      "Bash(curl -s http://localhost:8080/api/v1/machine/M-207)",
+      "Bash(curl -s http://localhost:8080/api/v1/machine/M-204)",
+      "Bash(pkill -f uvicorn)",
+      "Bash(curl:*)",
+      "Bash(git init:*)",
+      "Bash(nodered/flow.json:*)",
+      "Bash(git add:*)"
+    ]
+  }
+}

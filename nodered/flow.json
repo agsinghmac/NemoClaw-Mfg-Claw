@@ -1,0 +1,136 @@
+[
+    {
+        "id": "inject1",
+        "type": "inject",
+        "z": "flow1",
+        "name": "Every 5 seconds",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "5",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 150,
+        "y": 100,
+        "wires": [
+            [
+                "func1"
+            ]
+        ]
+    },
+    {
+        "id": "func1",
+        "type": "function",
+        "z": "flow1",
+        "name": "M-204 Telemetry",
+        "func": "var vib = Math.floor(Math.random() * 101); // 0-100\nvar temp = 60 + Math.floor(Math.random() * 61); // 60-120\nvar pressure = 20 + Math.floor(Math.random() * 31); // 20-50\nvar hours = 2000 + Math.floor(Math.random() * 601); // 2000-2600\nvar days = Math.floor(Math.random() * 30); // 0-29\nvar wear = ['low','medium','high'][Math.floor(Math.random() * 3)];\nvar fail = Math.random(); // 0-1\n\nmsg.payload = {\n    vibration_percentile: vib,\n    temperature: temp,\n    pressure: pressure,\n    operating_hours: hours,\n    last_maintenance_days_ago: days,\n    bearing_wear: wear,\n    failure_probability: fail\n};\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 350,
+        "y": 100,
+        "wires": [
+            [
+                "http1"
+            ]
+        ]
+    },
+    {
+        "id": "http1",
+        "type": "http request",
+        "z": "flow1",
+        "name": "PUT /machine/M-204/telemetry",
+        "method": "PUT",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "http://localhost:8080/api/v1/machine/M-204/telemetry",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "x": 550,
+        "y": 100,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "inject2",
+        "type": "inject",
+        "z": "flow1",
+        "name": "Every 5 seconds",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "5",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 150,
+        "y": 200,
+        "wires": [
+            [
+                "func2"
+            ]
+        ]
+    },
+    {
+        "id": "func2",
+        "type": "function",
+        "z": "flow1",
+        "name": "M-207 Telemetry",
+        "func": "var vib = Math.floor(Math.random() * 80); // 0-79 to avoid anomaly\nvar temp = 60 + Math.floor(Math.random() * 61); // 60-120\nvar pressure = 20 + Math.floor(Math.random() * 31); // 20-50\nvar hours = 1500 + Math.floor(Math.random() * 401); // 1500-1900\nvar days = Math.floor(Math.random() * 30); // 0-29\nvar wear = ['low','medium','high'][Math.floor(Math.random() * 3)];\nvar fail = Math.random() * 0.3; // lower failure probability\n\nmsg.payload = {\n    vibration_percentile: vib,\n    temperature: temp,\n    pressure: pressure,\n    operating_hours: hours,\n    last_maintenance_days_ago: days,\n    bearing_wear: wear,\n    failure_probability: fail\n};\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 350,
+        "y": 200,
+        "wires": [
+            [
+                "http2"
+            ]
+        ]
+    },
+    {
+        "id": "http2",
+        "type": "http request",
+        "z": "flow1",
+        "name": "PUT /machine/M-207/telemetry",
+        "method": "PUT",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "http://localhost:8080/api/v1/machine/M-207/telemetry",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "x": 550,
+        "y": 200,
+        "wires": [
+            []
+        ]
+    }
+]
