@@ -21,10 +21,6 @@ def trigger_scenario(scenario_id: str):
     Manually trigger a scenario for the demo dashboard.
     Creates an anomaly event for the decision claw to process.
     """
-    env = os.getenv("ENV", "production")
-    if env != "development":
-        raise HTTPException(status_code=403, detail="Trigger not available in production")
-
     # Normalise to uppercase
     scenario_id = scenario_id.upper()
 
