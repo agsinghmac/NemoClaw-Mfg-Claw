@@ -136,9 +136,15 @@
             if (isUpdating) return;
             isUpdating = true;
             fetch(`${API_BASE}/api/v1/machine/M-204`)
-                .then(r => r.json())
+                .then(r => {
+                    if (!r.ok) throw new Error(`HTTP ${r.status}: ${r.statusText}`);
+                    return r.json();
+                })
                 .then(data => updateTelemetryPill(data))
-                .catch(() => {})
+                .catch(err => {
+                    console.error('❌ pollMachine failed:', err);
+                    showBanner('error', 'Failed to update machine data — see console for details');
+                })
                 .finally(() => { isUpdating = false; });
         }
 
@@ -146,11 +152,17 @@
             if (isUpdating) return;
             isUpdating = true;
             fetch(`${API_BASE}/api/v1/events/pending`)
-                .then(r => r.json())
+                .then(r => {
+                    if (!r.ok) throw new Error(`HTTP ${r.status}: ${r.statusText}`);
+                    return r.json();
+                })
                 .then(data => {
                     document.getElementById('anomalyBanner').classList.toggle('hidden', data.events.length === 0);
                 })
-                .catch(() => {})
+                .catch(err => {
+                    console.error('❌ pollEvents failed:', err);
+                    showBanner('error', 'Failed to check for events — see console for details');
+                })
                 .finally(() => { isUpdating = false; });
         }
 
@@ -158,9 +170,12 @@
             if (isUpdating) return;
             isUpdating = true;
             fetch(`${API_BASE}/api/v1/log?limit=1`)
-                .then(r => r.json())
+                .then(r => {
+                    if (!r.ok) throw new Error(`HTTP ${r.status}: ${r.statusText}`);
+                    return r.json();
+                })
                 .then(data => {
-                    if (data.decisions.length > 0) {
+                    if (data && data.decisions && Array.isArray(data.decisions) && data.decisions.length > 0) {
                         const latest = data.decisions[0];
                         if (lastLogCreatedAt !== latest.created_at) {
                             lastLogCreatedAt = latest.created_at;
@@ -170,7 +185,10 @@
                         }
                     }
                 })
-                .catch(() => {})
+                .catch(err => {
+                    console.error('❌ pollLog failed:', err);
+                    showBanner('error', 'Failed to update decision log — see console for details');
+                })
                 .finally(() => { isUpdating = false; });
         }
 
